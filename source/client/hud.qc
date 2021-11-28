@@ -134,9 +134,9 @@ var struct
 	float 	x_position; 				// current x position
 	float 	y_position; 				// current y position
 	float 	x_velocity; 				// how fast the element moves on the x axis
-	float 	y_velocity 					// how fast the element moves on the y axis
+	float 	y_velocity; 				// how fast the element moves on the y axis
 	float 	opacity; 					// the opacity of the text_string as it progresses
-	float 	string_width 				// the width of text_string
+	float 	string_width; 				// the width of text_string
 	string 	text_string; 				// either '+(difference)' or '-(difference)'
 } point_elements[MAX_POINT_ELEMENTS];
 
@@ -220,7 +220,7 @@ void(float width, float height) HUD_Points =
 {
 	local float pointlength = 0, increm = 10, i = 0, pointwidth = 0, x = 0;
 	local float backwidth = 0.8*width;
-	vector TEXTCOLOR;
+	vector TEXTCOLOR = '0 0 0';
 	
 	for (i = 3; i >= 0; i = i - 1)
 	{
@@ -262,12 +262,12 @@ void(float width, float height) HUD_Grenades =
 
 	grenades = getstatf(STAT_GRENADES);
 	betties = getstatf(STAT_SECGRENADES);
-	drawpic([0.9*width,0.825*height,0], getImage("frag.tga"), [50, 50, 0], [1,1,1], 1);
-	drawstring([0.9*width + 28, 0.825*height + 32, 0], ftos(grenades), [0.025*width, 0.025*width, 0], [1, 1, 1], 1, 0);
+	drawpic([0.9*width,0.825*height,0], getImage("frag.tga"), [0.11*height, 0.11*height, 0], [1,1,1], 1);
+	drawstring([0.935*width, 0.900*height, 0], ftos(grenades), [0.025*width, 0.025*width, 0], [1, 1, 1], 1, 0);
 	
 	if (betties != -1) {
-		drawpic([0.825*width,0.825*height,0], getImage("betty.tga"), [50, 50, 0], [1,1,1], 1);
-		drawstring([0.825*width + 28, 0.825*height + 32, 0], ftos(betties), [0.025*width, 0.025*width, 0], [1, 1, 1], 1, 0);
+		drawpic([0.825*width,0.825*height,0], getImage("betty.tga"), [0.11*height, 0.11*height, 0], [1,1,1], 1);
+		drawstring([0.935*width, 0.900*height, 0], ftos(betties), [0.025*width, 0.025*width, 0], [1, 1, 1], 1, 0);
 	}
 }
 
@@ -364,7 +364,8 @@ void(float width, float height) HUD_Rounds =
 	}
 	else if (rounds_change == 2)//this is the rounds icon moving from middle
 	{
-		float round_center_y_offset, round_center_x_offset;
+		float round_center_y_offset = 0;
+		float round_center_x_offset = 0;
 				
 		drawpic([round_center_x + round_center_x_offset,round_center_y + round_center_y_offset,0], sb_round[0], [roundwidth,roundheight, 1], [107/255,(1/255),0], 1);
 		
@@ -805,6 +806,9 @@ void(float width, float height) HUD_Useprint =
 {
 	string usestring, usebutton, usespace;
 	float print_width, x, button_width;
+	
+	usestring = "";
+	usespace = "";
 		
 	tokenize(findkeysforcommand("+button7"));
 	usebutton = strtoupper(keynumtostring(stof(argv(0))));
@@ -902,80 +906,25 @@ int current_perk_order;
 	
 void(float width, float height) HUD_Perks =
 {
-	
-	int i, s;
-	int y = height - 100 - 34;
-	int x = 2;	
-			
-	for (i = 0; i < 9; i = i + 1)
-	{
-		if (perk_order[i])
-		{
-			if (perk_order[i] == P_JUG)
-			{
-				drawpic([x,y,0], getImage("jug.tga"), [32, 32, 1], [1,1,1], 1);
+	int 	i;
+	float 	y = 0.725;
+	float 	x = 0.005;
 
-				if (G_HUDHOR)
-					x += 34;
-				else
-					y -= 34;
+	for (i = 0; i < 9; i = i + 1) {
+		if (perk_order[i]) {
+			switch(perk_order[i]) {
+				case P_JUG: drawpic([x*width,y*height,0], getImage("jug.tga"), [0.075*height, 0.075*height, 1], [1,1,1], 1); break;
+				case P_DOUBLE: drawpic([x*width,y*height,0], getImage("double.tga"), [0.075*height, 0.075*height, 1], [1,1,1], 1); break;
+				case P_SPEED: drawpic([x*width,y*height,0], getImage("speed.tga"), [0.075*height, 0.075*height, 1], [1,1,1], 1); break;
+				case P_REVIVE: drawpic([x*width,y*height,0], getImage("revive.tga"), [0.075*height, 0.075*height, 1], [1,1,1], 1); break;
+				case P_FLOP: drawpic([x*width,y*height,0], getImage("flopper.tga"), [0.075*height, 0.075*height, 1], [1,1,1], 1); break;
+				case P_STAMIN: drawpic([x*width,y*height,0], getImage("stamin.tga"), [0.075*height, 0.075*height, 1], [1,1,1], 1); break;
+				case P_DEAD: drawpic([x*width,y*height,0], getImage("dead.tga"), [0.075*height, 0.075*height, 1], [1,1,1], 1); break;
+				case P_MULE: drawpic([x*width,y*height,0], getImage("mule.tga"), [0.075*height, 0.075*height, 1], [1,1,1], 1); break;
+				default: break;
 			}
-			else if (perk_order[i] == P_DOUBLE)
-			{
-				drawpic([x,y,0], getImage("double.tga"), [32, 32, 1], [1,1,1], 1);
-				if (G_HUDHOR)
-					x += 34;
-				else
-					y -= 34;
-			}
-			else if (perk_order[i] == P_SPEED)
-			{
-				drawpic([x,y,0], getImage("speed.tga"), [32, 32, 1], [1,1,1], 1);
-				if (G_HUDHOR)
-					x += 34;
-				else
-					y -= 34;
-			}
-			else if (perk_order[i] == P_REVIVE)
-			{
-				drawpic([x,y,0], getImage("revive.tga"), [32, 32, 1], [1,1,1], 1);
-				if (G_HUDHOR)
-					x += 34;
-				else
-					y -= 34;
-			}
-			else if (perk_order[i] == P_FLOP)
-			{
-				drawpic([x,y,0], getImage("flopper.tga"), [32, 32, 1], [1,1,1], 1);
-				if (G_HUDHOR)
-					x += 34;
-				else
-					y -= 34;
-			}
-			else if (perk_order[i] == P_STAMIN)
-			{
-				drawpic([x,y,0], getImage("stamin.tga"), [32, 32, 1], [1,1,1], 1);
-				if (G_HUDHOR)
-					x += 34;
-				else
-					y -= 34;
-			}
-			else if (perk_order[i] == P_DEAD)
-			{
-				drawpic([x,y,0], getImage("dead.tga"), [32, 32, 1], [1,1,1], 1);
-				if (G_HUDHOR)
-					x += 34;
-				else
-					y -= 34;
-			}
-			else if (perk_order[i] == P_MULE)
-			{
-				drawpic([x,y,0], getImage("mule.tga"), [32, 32, 1], [1,1,1], 1);
-				if (G_HUDHOR)
-					x += 34;
-				else
-					y -= 34;
-			}
+
+			y -= 0.08;
 		}
 	}
 }

@@ -143,7 +143,6 @@ string huddir;
 //this just cleans up settings a bit..
 #define     S_ENABLED       "Enabled"
 #define     S_DISABLED      "Disabled"
-float projBr;
 float wasigs;
 
 //controls
@@ -190,4 +189,5 @@ float screen_height_219[MAX_219];
 */
 float GPActive[32];
 
+string build_datetime;
 #define VERSION_STRING  "v1.0"

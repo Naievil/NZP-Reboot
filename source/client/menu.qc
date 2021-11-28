@@ -99,7 +99,7 @@ void() menu_loadkn =
 
 void() menu_join =
 {
-	setcursormode(TRUE,"menu/cursor");
+	setcursormode(TRUE, cvar_string("cl_cursor"), __NULL__, cvar("cl_cursor_scale"));
 	in_menu = MENU_JOIN;
 };
 
@@ -205,12 +205,10 @@ void() settings_fps = {
 void() settings_brite = {
 	local float br = cvar("gamma");
 
-	br -= 0.1;
-	projBr += 0.1;
+	br += 0.1;
 
-	if (br < 0) {
+	if (br > 2) {
 		br = 2;
-		projBr = 0;
 	}
 
 	cvar_set("gamma", ftos(br));
@@ -219,12 +217,10 @@ void() settings_brite = {
 void() settings_brite2 = {
 	local float br = cvar("gamma");
 
-	br += 0.1;
-	projBr -= 0.1;
+	br -= 0.1;
 
-	if (br > 2) {
-		br = 0;
-		projBr = 2;
+	if (br < 0.5) {
+		br = 0.5;
 	}
 
 	cvar_set("gamma", ftos(br));
@@ -1372,7 +1368,7 @@ void() Draw_Extra_GSettings =
 
 	// Brightness
 	// have to use a drawfill because of how gamma values are subtracted.. for some reason
-	drawfill ([0.475*g_width, 0.5255*g_height, 0], [g_height * (projBr/3), g_height * 0.030, 1], [0.8, 0.8, 0.8], 1, 0);
+	drawfill ([0.475*g_width, 0.5255*g_height, 0], [g_height * (cvar("gamma")/3), g_height * 0.030, 1], [0.8, 0.8, 0.8], 1, 0);
 
 	// Decals
 	if (cvar("nzp_decals") == 0)
@@ -1792,6 +1788,7 @@ void() Draw_Extra_ASettings =
 }
 
 float menu_sound_length;
+float menu_sound_time;
 
 void() Draw_Menu =
 {
@@ -1799,13 +1796,17 @@ void() Draw_Menu =
 	if (menu_initialized == false && in_menu == MENU_MAIN) {
 		localsound_enhanced("tracks/tensioned_by_the_damned.mp3", CHAN_MUSIC, 1);
 		menu_sound_length = 490; // have to hard code because soundlength() doesn't like MP3 media it seems..
+		menu_sound_time = 0;
 		menu_initialized = true;
 	}
 
 	// restart the track if it has ended
-	if (menu_initialized == true && (getsoundtime(self, 1) >= menu_sound_length - 1)) {
+	if (menu_initialized == true && (menu_sound_time >= menu_sound_length - 1)) {
 		localsound_enhanced("tracks/tensioned_by_the_damned.mp3", CHAN_MUSIC, 1);
+		menu_sound_time = 0;
 	}
+
+	menu_sound_time += frametime;
 	
 	// background
 	if(serverkey("constate") == "disconnected")
@@ -1821,8 +1822,17 @@ void() Draw_Menu =
 
 	// version string
 	if (in_menu == MENU_MAIN || in_menu == MENU_ABOUT || in_menu == MENU_SINGLE || in_menu == MENU_ACHIEVEMENTS 
-		|| in_menu == MENU_CUSTOMS || in_menu == MENU_SETTINGS)
-		drawstring([(0.925*g_width - strlen(VERSION_STRING)*5*g_width/480), 0.025*g_height, 0], VERSION_STRING, [g_height * 0.03, g_height * 0.03, 1], [0.8, 0.8, 0.8], 1, 0);
+		|| in_menu == MENU_CUSTOMS || in_menu == MENU_SETTINGS) {
+		string vers_string;
+
+		if (cvar("cl_showbuildtime") > 0) {
+			vers_string = build_datetime;
+		} else {
+			vers_string = VERSION_STRING;
+		}
+
+		drawstring([(0.975*g_width -  stringwidth(vers_string, 0, [0.03*g_height, 0.03*g_height, 0])), 0.025*g_height, 0], vers_string, [g_height * 0.03, g_height * 0.03, 1], [0.8, 0.8, 0.8], 1, 0);
+	}
 
 	//menu title
 	local string title = "";
