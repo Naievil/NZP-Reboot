@@ -3,3 +3,4 @@
 #pragma sourcefile pspprogs.src
 #pragma sourcefile nxprogs.src
 #pragma sourcefile vitaprogs.src
+#pragma sourcefile 3dsprogs.src

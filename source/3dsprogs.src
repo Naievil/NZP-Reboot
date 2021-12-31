@@ -1,0 +1,5 @@
+./../3ds/nzportable/nzp/progs.dat
+#pragma warning disable Q208
+
+3ds/QC/defs.qc                                             // These HAVE to stay
+
