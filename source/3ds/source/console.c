@@ -215,7 +215,7 @@ void Con_Init (void)
 	char	temp[MAXGAMEDIRLEN+1];
 	char	*t2 = "/qconsole.log";
 
-	con_debuglog = COM_CheckParm("-condebug");
+	con_debuglog = 1;
 
 	if (con_debuglog)
 	{
@@ -353,7 +353,7 @@ Con_DebugLog
 void Con_DebugLog(char *file, char *fmt, ...)
 {
     va_list argptr;
-    static char data[1024];
+    static char data[2048];
     int fd;
 
     va_start(argptr, fmt);
