@@ -481,7 +481,9 @@ void() PlayerSpawn =
 	self.isspec = FALSE;
 	self.classname = "player";
 	self.solid = SOLID_BBOX;
+	#ifndef 3DS // naievil -- FIXME
 	setmodel(self, "models/player.mdl");
+	#endif
 	self.movetype = MOVETYPE_WALK;
 	self.max_health = self.health = 100;
 

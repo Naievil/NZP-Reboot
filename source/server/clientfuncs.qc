@@ -6,7 +6,7 @@ void SetUpdate(entity client, float type, float val1, float val2, float val3)
 {
 	#ifndef PSP
 	#ifndef NX
-
+	#ifndef 3DS
 	if (type != 2)
 	{
 		WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
@@ -30,10 +30,12 @@ void SetUpdate(entity client, float type, float val1, float val2, float val3)
 	}
 	#endif
 	#endif
+	#endif
 }
 
 #ifndef PSP
 #ifndef NX
+#ifndef 3DS
 void(entity to, float type, float cost, float weapon) useprint = {
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EVENT_USEPRINT);
@@ -43,6 +45,7 @@ void(entity to, float type, float cost, float weapon) useprint = {
 	msg_entity = to;
 	multicast('0 0 0', MULTICAST_ONE);
 }
+#endif
 #endif
 #endif
 
@@ -66,7 +69,8 @@ void(vector org) CallExplosion = {
 void NotifyNewRound(float to) {
 	#ifndef PSP
 	#ifndef NX
-	
+	#ifndef 3DS
+
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EVENT_NEWROUND);
 	WriteByte(MSG_MULTICAST, to);
@@ -74,12 +78,14 @@ void NotifyNewRound(float to) {
 	
 	#endif
 	#endif
+	#endif
 }
 
 void SetRound(entity client, float to) {
 	#ifndef PSP
 	#ifndef NX
-	
+	#ifndef 3DS
+
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EVENT_SETROUND);
 	WriteByte(MSG_MULTICAST, to);
@@ -88,13 +94,14 @@ void SetRound(entity client, float to) {
 	
 	#endif
 	#endif
+	#endif
 }
 
 void SetPerk(entity client, float to) 
 {
 	#ifndef PSP
 	#ifndef NX
-	
+	#ifndef 3DS
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EVENT_PERK);
 	WriteLong(MSG_MULTICAST, to);
@@ -103,13 +110,15 @@ void SetPerk(entity client, float to)
 	
 	#endif
 	#endif
+	#endif
 }
 
 void(float to) SwitchWeapon =
 {
 	#ifndef PSP
 	#ifndef NX
-	
+	#ifndef 3DS
+
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EVENT_WEAPONCHANGE);
 	WriteByte(MSG_MULTICAST, to);
@@ -121,13 +130,14 @@ void(float to) SwitchWeapon =
 	
 	#endif
 	#endif
+	#endif
 }
 
 void(string to, float skin) UpdateVmodel =
 {
 	#ifndef PSP
 	#ifndef NX
-	
+	#ifndef 3DS
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EVENT_UPDATEVMODEL);
 	WriteString(MSG_MULTICAST, to);
@@ -137,12 +147,14 @@ void(string to, float skin) UpdateVmodel =
 	
 	#endif
 	#endif
+	#endif
 }
 
 void(string to, float skin) UpdateV2model =
 {
 	#ifndef PSP
 	#ifndef NX
+	#ifndef 3DS
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EVENT_UPDATEV2MODEL);
 	WriteString(MSG_MULTICAST, to);
@@ -151,12 +163,15 @@ void(string to, float skin) UpdateV2model =
 	multicast('0 0 0', MULTICAST_ONE);
 	#endif	
 	#endif
+	#endif
 }
 
 void(float broadcast_time, float type) BroadcastMessage =
 {
 	#ifndef PSP
 	#ifndef NX
+	#ifndef 3DS
+
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EVENT_BROADCAST);
 	WriteByte(MSG_MULTICAST, broadcast_time);
@@ -165,12 +180,14 @@ void(float broadcast_time, float type) BroadcastMessage =
 	
 	#endif
 	#endif
+	#endif
 }
 
 void(float playernum, float points, float am, float kills, string name, entity person) UpdatePlayerPoints =
 {
 	#ifndef PSP
 	#ifndef NX
+	#ifndef 3DS
 	if (player_count == 0) {
 		WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 		WriteByte(MSG_MULTICAST, EVENT_POINTUPDATE);
@@ -192,7 +209,7 @@ void(float playernum, float points, float am, float kills, string name, entity p
 		WriteString(MSG_MULTICAST, name);
 		multicast('0 0 0', MULTICAST_ALL);
 	}
-	
+	#endif
 	#endif
 	#endif
 }
@@ -200,6 +217,7 @@ void(float playernum, float points, float am, float kills, string name, entity p
 void(float count) UpdatePlayerCount = {
 	#ifndef PSP
 	#ifndef NX
+	#ifndef 3DS
 	if (count == 0)
 		return;
 	else {
@@ -208,7 +226,7 @@ void(float count) UpdatePlayerCount = {
 		WriteByte(MSG_MULTICAST, count);
 		multicast('0 0 0', MULTICAST_ALL);
 	}
-
+	#endif
 	#endif
 	#endif
 }
@@ -217,14 +235,14 @@ void(float newtime, float newtype, entity change) PromptLevelChange =
 {
 	#ifndef PSP
 	#ifndef NX
-	
+	#ifndef 3DS
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EVENT_BLACKOUT);
 	WriteByte(MSG_MULTICAST, newtime);
 	WriteByte(MSG_MULTICAST, newtype);
 	msg_entity = change;
 	multicast('0 0 0', MULTICAST_ONE);
-	
+	#endif
 	#endif
 	#endif
 }
@@ -235,6 +253,7 @@ void(entity who) UpdatePunchangle =
 	// naievil -- shit logic lol...but result looks clean as fuck...
 	#ifndef PSP
 	#ifndef NX
+	#ifndef 3DS
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EVENT_PUNCHANGLE);
 	WriteCoord(MSG_MULTICAST, who.punchangle_x);
@@ -277,10 +296,12 @@ void(entity who) UpdatePunchangle =
 		
 	#endif
 	#endif
+	#endif
 }
 
 #ifndef PSP
 #ifndef NX
+#ifndef 3DS
 void(string h, float h2, entity who) pushHUD = {
 	if (player_count == 0) {
 		WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
@@ -371,8 +392,10 @@ void(string chaptertitle, string location, string date, string person, entity wh
 }
 #endif
 #endif
+#endif
 
 #ifndef NX
+#ifndef 3DS
 void (float achievement_id, optional entity who) GiveAchievement =
 {
 #ifdef PSP
@@ -447,6 +470,7 @@ void (float achievement_id, float progress_value, optional entity who) UpdateAch
 #endif // PSP
 	}
 }
+#endif // 3DS
 #endif // NX
 
 // *****************************************

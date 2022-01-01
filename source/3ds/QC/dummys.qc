@@ -55,8 +55,6 @@ entity (entity start, .float field, float match) findfloat = {return world;}
 .float button8;
 .float button9;
 
-void() Soft_Restart = {};
-void(vector o, vector d, float color, float count) particle = {};
 
 void(entity client, float type, float cost, float weapon) useprint = {};
 
@@ -78,12 +76,6 @@ void(entity client, float type, float cost, float weapon) useprint = {};
 #define EF_RAYRED		 	8196
 #define EF_RAYGREEN		 	16384
 
-void() Do_Zombie_A = {};
-void() func_door_nzp;
-void() mystery_box;
-
-entity windows[32];
-float wincnt;
 
 float(entity zombie, entity target) Do_Pathfind_psp = {return 0;};
 void(string s) Open_Waypoint = {};
@@ -92,23 +84,7 @@ vector(entity zombie,vector start,vector min, vector max) Get_First_Waypoint = {
 void(string s) Close_Waypoint = {};
 .vector		ADS_Offset;
 #define	SVC_HITMARK				 36
-
-
-
-void () CL_SendWeaponFire =
-{
-
-}
-
-void() ParseClientCommand = {}
-
-void() PutClientInServer;
-void() InitRounds;
-
-//moto -- put this here because it keeps soft_restart somewhat clean..
-void(entity door) reclose_door = {
-
-}
+#define	SVC_WEAPONFIRE				 36
 
 vector(entity what) Get_Waypoint_Near = {return '0 0 0';};
 
@@ -127,3 +103,27 @@ float(entity e, float healamount, float ignore) T_Heal = {return 0;};
 float(vector start, vector min, vector max, vector end, float nomonsters, entity forent) tracemove = {return 0;};
 
 #define FILE_WRITE 1
+
+float waypoint_mode;
+
+#define true 1
+#define false 0
+
+.float cost;
+.string target2;
+.string target3;
+.string target4;
+.string target5;
+.string target6;
+.string target7;
+.string target8;
+.string target9;
+
+.float sequence;
+.string teddyremovetarget;
+
+.float recoil_delay;
+
+string 		CMD_STRING;
+
+void(string com) SV_ParseClientCommand;

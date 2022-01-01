@@ -17,7 +17,7 @@ void() StartFrame =
 	deathmatch = cvar("deathmatch");
 	//coop = cvar("coop");
 	framecount = framecount + 1;
-
+	#ifndef 3DS // naievil -- FIXME
 	if (waypoint_mode) {
 		if (!zombie_cleaned_w) {
 				entity zent;
@@ -92,19 +92,25 @@ void() StartFrame =
 			InitRounds();
 		}
 	}
+	#endif
 }
 string(string s) precache_model         = #20;
 
 void() precaches = 
 {
+	#ifdef 3DS // naievil -- FIXME
+	precache_model ("progs/player.mdl");
+	#else
 	precache_model ("models/player.mdl");
-	
+
 	#ifndef PSP
+	#ifndef 3DS
 	#ifndef NX
 	precache_model ("models/v_morphine.mdl");
 
 	if (world.song != "")
 		precache_sound (world.song);
+	#endif
 	#endif
 	#endif
 	
@@ -256,14 +262,15 @@ void() precaches =
 	// Moto -- FIXME: compile FTE to remove this engine sound request
 	precache_sound ("demon/dland2.wav");
 	#endif
+	#endif
 }
 
 //called when map loaded
 void() worldspawn =
 {
 	precaches();
+	#ifndef 3DS // naievil -- FIXME
 	LightStyles_setup();
-
 	#ifdef PC
 	clientstat(STAT_CURRENTMAG, EV_FLOAT, currentmag);
 	clientstat(STAT_CURRENTMAG2, EV_FLOAT, currentmag2);
@@ -301,7 +308,7 @@ void() worldspawn =
 	G_PERKS = 0;
 	G_PERKPOWER = 0;
 	load_nzd();
-	
+	#endif
 }
 
 void() SpectatorConnect =

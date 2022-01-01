@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 
+#pragma GCC push_options
+#pragma GCC optimize ("O0") // naievil -- this is actually fucking stupid
+
 dprograms_t		*progs;
 dfunction_t		*pr_functions;
 char			*pr_strings;
@@ -30,6 +33,8 @@ dstatement_t	*pr_statements;
 globalvars_t	*pr_global_struct;
 float			*pr_globals;			// same as pr_global_struct
 int				pr_edict_size;	// in bytes
+
+#pragma GCC pop_options
 
 unsigned short		pr_crc;
 
@@ -187,7 +192,7 @@ ddef_t *ED_FindField (char *name)
 {
 	ddef_t		*def;
 	int			i;
-	
+
 	for (i=0 ; i<progs->numfielddefs ; i++)
 	{
 		def = &pr_fielddefs[i];
@@ -816,26 +821,26 @@ char *ED_ParseEdict (char *data, edict_t *ent)
 // go through all the dictionary pairs
 	while (1)
 	{	
-	// parse key
+		// parse key
 		data = COM_Parse (data);
 		if (com_token[0] == '}')
 			break;
 		if (!data)
 			Sys_Error ("ED_ParseEntity: EOF without closing brace");
 		
-// anglehack is to allow QuakeEd to write single scalar angles
-// and allow them to be turned into vectors. (FIXME...)
-if (!strcmp(com_token, "angle"))
-{
-	strcpy (com_token, "angles");
-	anglehack = true;
-}
-else
-	anglehack = false;
+		// anglehack is to allow QuakeEd to write single scalar angles
+		// and allow them to be turned into vectors. (FIXME...)
+		if (!strcmp(com_token, "angle"))
+		{
+			strcpy (com_token, "angles");
+			anglehack = true;
+		}
+		else
+			anglehack = false;
 
-// FIXME: change light to _light to get rid of this hack
-if (!strcmp(com_token, "light"))
-	strcpy (com_token, "light_lev");	// hack for single light def
+		// FIXME: change light to _light to get rid of this hack
+		if (!strcmp(com_token, "light"))
+			strcpy (com_token, "light_lev");	// hack for single light def
 
 		strcpy (keyname, com_token);
 
@@ -847,7 +852,7 @@ if (!strcmp(com_token, "light"))
 			n--;
 		}
 
-	// parse value	
+		// parse value	
 		data = COM_Parse (data);
 		if (!data)
 			Sys_Error ("ED_ParseEntity: EOF without closing brace");
@@ -857,8 +862,8 @@ if (!strcmp(com_token, "light"))
 
 		init = true;	
 
-// keynames with a leading underscore are used for utility comments,
-// and are immediately discarded by quake
+		// keynames with a leading underscore are used for utility comments,
+		// and are immediately discarded by quake
 		if (keyname[0] == '_')
 			continue;
 		
@@ -869,12 +874,12 @@ if (!strcmp(com_token, "light"))
 			continue;
 		}
 
-if (anglehack)
-{
-char	temp[32];
-strcpy (temp, com_token);
-sprintf (com_token, "0 %s 0", temp);
-}
+		if (anglehack)
+		{
+			char	temp[32];
+			strcpy (temp, com_token);
+			sprintf (com_token, "0 %s 0", temp);
+		}
 
 		if (!ED_ParseEpair ((void *)&ent->v, key, com_token))
 			Host_Error ("ED_ParseEdict: parse error");
@@ -912,7 +917,7 @@ void ED_LoadFromFile (char *data)
 	inhibit = 0;
 	pr_global_struct->time = sv.time;
 	
-// parse ents
+	// parse ents
 	while (1)
 	{
 // parse the opening brace	
@@ -1005,9 +1010,9 @@ void PR_LoadProgs (void)
 		((int *)progs)[i] = LittleLong ( ((int *)progs)[i] );		
 
 	if (progs->version != PROG_VERSION)
-		Sys_Error ("progs.dat has wrong version number (%i should be %i)", progs->version, PROG_VERSION);
+		Con_Printf ("progs.dat has wrong version number (%i should be %i)\n", progs->version, PROG_VERSION);
 	if (progs->crc != PROGHEADER_CRC)
-		Sys_Error ("progs.dat system vars have been modified, progdefs.h is out of date");
+		Con_Printf ("progs.dat system vars have been modified, progdefs.h is out of date\n");
 
 	pr_functions = (dfunction_t *)((byte *)progs + progs->ofs_functions);
 	pr_strings = (char *)progs + progs->ofs_strings;
@@ -1057,6 +1062,7 @@ void PR_LoadProgs (void)
 
 	for (i=0 ; i<progs->numglobals ; i++)
 		((int *)pr_globals)[i] = LittleLong (((int *)pr_globals)[i]);
+
 }
 
 

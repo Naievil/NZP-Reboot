@@ -2,7 +2,9 @@
 
 #ifndef PSP
 #ifndef NX
+#ifndef 3DS
 #pragma target FTE
+#endif
 #endif
 #endif 
 
